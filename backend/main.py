@@ -5,16 +5,12 @@ from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
 
-# --- App Initialization ---
 app = FastAPI(
     title="Simple Notes API",
     description="A simple API for creating, reading, updating, and deleting notes.",
     version="1.0.0"
 )
 
-# --- CORS Middleware ---
-# This allows the React frontend (running on a different port) to communicate with the backend.
-# You can override allowed origins via env var ALLOWED_ORIGINS (comma-separated)
 default_origins = [
     "http://localhost:3000",
     "http://localhost:5173", # Default Vite port
@@ -30,13 +26,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# --- In-Memory Database ---
-# For this simple example, we use a dictionary to store notes.
-# In a real application, you would use a proper database like PostgreSQL or SQLite.
 db = {}
 
-# --- Pydantic Models (Data Validation) ---
 class NoteBase(BaseModel):
     title: str
     content: str
@@ -46,8 +37,6 @@ class NoteCreate(NoteBase):
 
 class Note(NoteBase):
     id: str
-
-# --- API Endpoints ---
 
 @app.get("/", tags=["Root"])
 def read_root():
